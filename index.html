@@ -6,17 +6,59 @@
   <title>TBR Jar</title>
 </head>
 <body>
-  <h1>TBR Jar</h1>
-  <p>Less deciding, more reading.</p>
+  <header>
+    <h1>TBR Jar</h1>
+    <p>Less deciding, more reading.</p>
+  </header>
 
-  <h2>Add a book</h2>
-  <input id="bookInput" type="text" placeholder="e.g. Solaris">
-  <button id="addBtn">Add</button>
+  <main>
+    <section id="add" aria-labelledby="add-heading">
+      <h2 id="add-heading">Add a book</h2>
+      <form id="add-form">
+        <input id="slip-input" name="title" type="text" maxlength="80" required autocomplete="off"
+               placeholder="Solaris" aria-labelledby="add-heading">
+        <button type="submit">Add</button>
+      </form>
+    </section>
 
-  <h2>In the jar</h2>
-  <ol id="slips"></ol>
+    <section id="jar" aria-labelledby="in-the-jar">
+      <h2 id="in-the-jar">In the jar</h2>
+      <ol id="slip-list"></ol>
+    </section>
+  </main>
 
-  <button id="shakeBtn">Shake the jar</button>
-  <p id="result"></p>
+  <script type="module">
+    const slips = [];
+
+    const form = document.querySelector("#add-form");
+    const input = document.querySelector("#slip-input");
+    const list = document.querySelector("#slip-list");
+
+    function addSlip(title) {
+      slips.push({ id: crypto.randomUUID(), title });
+    }
+
+    function render() {
+      list.replaceChildren(
+        ...slips.map((slip) => {
+          const li = document.createElement("li");
+          li.textContent = slip.title;
+          return li;
+        })
+      );
+    }
+
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const title = input.value.trim();
+      if (!title) return;
+      addSlip(title);
+      render();
+      form.reset();
+      input.focus();
+    });
+
+    render();
+  </script>
 </body>
 </html>
