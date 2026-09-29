@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>TBR Jar</title>
 </head>
+
 <body>
   <header>
     <h1>TBR Jar</h1>
@@ -12,53 +14,50 @@
   </header>
 
   <main>
-    <section id="add" aria-labelledby="add-heading">
-      <h2 id="add-heading">Add a book</h2>
+    <section id="add">
+      <h2><label for="slip-input">Add a book</label></h2>
       <form id="add-form">
-        <input id="slip-input" name="title" type="text" maxlength="80" required autocomplete="off"
-               placeholder="Solaris" aria-labelledby="add-heading">
-        <button type="submit">Add</button>
+        <input id="slip-input" type="text" placeholder="e.g., Solaris" maxlength="80" required>
+        <button>Add</button>
       </form>
     </section>
 
-    <section id="jar" aria-labelledby="in-the-jar">
-      <h2 id="in-the-jar">In the jar</h2>
+    <section id="jar">
+      <h2>In the jar</h2>
       <ol id="slip-list"></ol>
     </section>
   </main>
 
-  <script type="module">
+  <script>
     const slips = [];
 
     const form = document.querySelector("#add-form");
     const input = document.querySelector("#slip-input");
     const list = document.querySelector("#slip-list");
 
-    function addSlip(title) {
-      slips.push({ id: crypto.randomUUID(), title });
-    }
-
     function render() {
-      list.replaceChildren(
-        ...slips.map((slip) => {
-          const li = document.createElement("li");
-          li.textContent = slip.title;
-          return li;
-        })
-      );
+      list.innerHTML = "";
+
+      for (let i = 0; i < slips.length; i++) {
+        const li = document.createElement("li");
+        li.textContent = slips[i].title;
+        list.appendChild(li);
+      }
     }
 
-    form.addEventListener("submit", (event) => {
+    form.addEventListener("submit", function (event) {
       event.preventDefault();
-      const title = input.value.trim();
-      if (!title) return;
-      addSlip(title);
-      render();
-      form.reset();
-      input.focus();
-    });
 
-    render();
+      const title = input.value.trim();
+      if (title === "") {
+        return;
+      }
+
+      slips.push({ id: Date.now(), title: title });
+      render();
+      input.value = "";
+    });
   </script>
 </body>
+
 </html>
